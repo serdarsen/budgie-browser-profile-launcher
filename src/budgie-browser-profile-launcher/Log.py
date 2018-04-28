@@ -12,7 +12,7 @@
 class Log():
 
     logErrorOn = True
-    logDebugOn = True
+    logDebugOn = False
     logInfoOn = True
 
     ERROR_TAG = "Log e: "
