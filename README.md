@@ -6,7 +6,7 @@ Budgie Browser Profile Launcher
 <br/>  
 Budgie Browser Profile Launcher is a Budgie Desktop applet for productivity. This applet lists and launches Chromium Browser and Google Chrome user profiles.<br/><br/>  
   
-<img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot1.gif" width="341" height="354"/>
+<img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot1.gif" width="465" height="517"/>
   
 Install  
 -------  
