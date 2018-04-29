@@ -30,6 +30,7 @@ References
 
 [Ubuntu Budgie](https://ubuntubudgie.org/)<br/>
 [budgie-desktop/budgie-desktop-examples](https://github.com/budgie-desktop/budgie-desktop-examples/tree/master/python_project)<br/>
+[budgie-menu](https://github.com/budgie-desktop/budgie-desktop/tree/master/src/applets/budgie-menu)
 
 License  
 -------  
