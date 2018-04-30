@@ -20,8 +20,6 @@ Install
    # Execute the install script.
    ./install.sh
    
-   # Now log-off to the login screen and log back in.
-   
    # You can add Budgie Browser Profile Launcher to your panel from Budgie Desktop Settings.
 
 ```  
