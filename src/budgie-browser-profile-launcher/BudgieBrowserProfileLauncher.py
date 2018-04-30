@@ -24,7 +24,7 @@ except ImportError:
     DEVNULL = open(os.devnull, 'wb')
 
 from LocalStateInfoLoader import LocalStateInfoLoader
-from Log import Log
+from FileLog import FileLog
 
 class BudgieBrowserProfileLauncher(GObject.GObject, Budgie.Plugin):
     #This is simply an entry point into your Budgie Applet implementation. Note you must always override Object, and implement Plugin.
@@ -44,6 +44,7 @@ class BudgieBrowserProfileLauncher(GObject.GObject, Budgie.Plugin):
 class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
     #Budgie.Applet is in fact a Gtk.Bin
 
+    APPINDICATOR_ID = "io_serdarsen_github_budgie_browser_profile_launcher"
     TAG = "BrowserProfileLauncherApplet"
     manager = None
     menuListBoxMarginTop = 0
@@ -66,10 +67,16 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
     iconChromiumPath = None
     iconChromePath = None
     iconIndicatorPath = None
+    profiles = []
 
     def __init__(self, uuid):
 
         Budgie.Applet.__init__(self)
+
+        self.fileLog = FileLog("budgie-browser-profile-launcher")
+
+
+        self.fileLog.i(self.TAG, "BudgieBrowserProfileLauncherApplet initialising ...")
 
         self.localStateInfoLoader = LocalStateInfoLoader()
 
@@ -80,7 +87,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
             self.iconChromePath = self.dir_path + "/icon_chrome.svg"
             self.iconIndicatorPath = self.dir_path + "/icon_indicator.svg"
         except:
-            Log.e(self.TAG, "error_3010 loads files error")
+            self.fileLog.e(self.TAG, "error_3010")
 
         #indicator icon and box
         self.indicatorBox = Gtk.EventBox()
@@ -90,6 +97,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
             self.indicatorBox.add(self.iconIndicator)
 
         self.indicatorBox.show_all()
+
         self.add(self.indicatorBox)
         self.popover = Budgie.Popover.new(self.indicatorBox)
         self.popover.set_default_size(self.popoverWidth, self.popoverHeight)
@@ -100,7 +108,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
         # Holds all the rows
         self.menuListBox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=self.menuListBoxSpacing);
         self.menuListBox.props.valign = Gtk.Align.END
-        
+
         # Must call after popover, localStateInfoLoader,
         # menuListBox, iconChromePath and iconChromiumPath inits
         self.updateProfileList()
@@ -132,6 +140,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
         self.indicatorBox.connect("button-press-event", self.on_press)
 
     def on_press(self, box, e):
+        self.fileLog.i(self.TAG, "on_press")
         if e.button != 1:
             return Gdk.EVENT_PROPAGATE
         if self.popover.get_visible():
@@ -154,7 +163,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
             profile = button.getProfile()
             self.launchBrowserProfile(profile)
         except:
-            Log.e(self.TAG, "error_1011 listItemOnClick error")
+            self.fileLog.e(self.TAG, "error_1011")
 
     #this is an original method from budgie applet python example on github
     def do_update_popovers(self, manager):
@@ -169,14 +178,14 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
                 p1 = Popen(['chromium-browser', '--profile-directory=%s' % profile.getProfileKey()], stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
                 p1.poll()
             except:
-                Log.e(self.TAG, "error_1010 launchBrowser chromium-browser error")
+                self.fileLog.e(self.TAG, "error_1010")
 
         elif (profile.isGoogleChrome()):
             try:
                 p2 = Popen(['google-chrome', '--profile-directory=%s' % profile.getProfileKey()], stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
                 p2.poll()
             except:
-                Log.e(self.TAG, "error_1010 launchBrowser google-chrome error")
+                self.fileLog.e(self.TAG, "error_1010")
 
     #updates profiles in popover
     def updateProfileList(self):
@@ -186,9 +195,13 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
             for child in self.menuListBox.get_children():
                 self.menuListBox.remove(child)
 
-        self.profiles = self.localStateInfoLoader.getProfiles()
+        try:
+            self.profiles = self.localStateInfoLoader.getProfiles()
+        except :
+            self.fileLog.e(self.TAG, "error_1015")
 
         self.popoverHeight = self.popoverBaseHeight
+
         for profile in self.profiles:
 
             menuButton = MenuButton(profile)
@@ -230,7 +243,6 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
         self.popoverHeight = (self.menuListRowHeight * (profilesLenght + 1)) + (self.menuListBoxSpacing * profilesLenght) + self.popoverBaseHeight
         if(self.popoverHeight > self.popoverMaxHeight):
             self.popoverHeight = self.popoverMaxHeight
-        Log.d(self.TAG, "popoverHeight %s : " % self.popoverHeight)
         self.popover.get_child().show_all()
         self.popover.resize(self.popoverWidth, self.popoverHeight)
 

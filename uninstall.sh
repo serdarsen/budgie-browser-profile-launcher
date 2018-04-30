@@ -16,16 +16,14 @@ then
 fi
 
 function fail() {
-    echo "FAIL: Installation failed. Please note any errors above."
+    echo "FAIL: Uninstallation failed. Please note any errors above."
     exit 1
 }
 
 # Actual installation
-echo "Installing Budgie Browser Profile Launcher to $PLUGIN_DIR"
+echo "Uninstalling Budgie Browser Profile Launcher to $PLUGIN_DIR"
 
 sudo rm -rf "${PLUGIN_DIR}/budgie-browser-profile-launcher" || fail
-sudo cp -r ./src/budgie-browser-profile-launcher "${PLUGIN_DIR}/" || fail
-sudo chmod -R 644 "${PLUGIN_DIR}/budgie-browser-profile-launcher/BudgieBrowserProfileLauncher.py" || fail 
 budgie-panel --replace &
 
-echo "Done. You should be able to add the applet to your panel now."
+echo "Done. Browser Profile Launcher Uninstalled."

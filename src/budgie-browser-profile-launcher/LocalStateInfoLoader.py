@@ -12,29 +12,41 @@
 from os.path import expanduser
 import json
 from Log import Log
+import sys
+from FileLog import FileLog
+import os.path
 
 class LocalStateInfoLoader():
 
     TAG = "LocalStateInfoLoader"
+    home_dir = ""
+    chromiumPath = ""
+    chromePath = ""
+    chromium_data = None
+    chrome_data = None
 
     def __init__(self):
 
         try:
             self.home_dir = expanduser("~")
+            self.chromiumPath = self.home_dir + "/.config/chromium/Local State"
+            self.chromePath = self.home_dir + "/.config/google-chrome/Local State"
         except:
             Log.e("error_1015 get home_dir error")
 
-        self.chromium_data = None
-        self.chrome_data = None
         self.profilesList = []
+        self.fileLog = FileLog("budgie-browser-profile-launcher")
 
     def getProfiles(self):
         self.profilesList = []
         profilesListChromium = []
-        try:
-            self.chromium_data = json.load(open(self.home_dir + '/.config/chromium/Local State'))
-        except:
-            Log.e(self.TAG, "error_1016 chromium-browser Local State file load error")
+
+        if(os.path.exists(self.chromiumPath)):
+            try:
+                with open(self.chromiumPath, "r") as file:
+                    self.chromium_data = json.load(file)
+            except:
+                self.fileLog.e(self.TAG, "error_5110")
 
         if(self.chromium_data is not None):
             try:
@@ -45,14 +57,18 @@ class LocalStateInfoLoader():
                     profile_name = profile_data['name']
                     profilesListChromium.append(Profile(True, False, profile_key, profile_name))
                 profilesListChromium = sorted(profilesListChromium, key=lambda x: x.getProfileName().upper(), reverse=False)
-            except:
-                Log.e(self.TAG, "error_1012 getProfiles error")
+
+            except :
+                self.fileLog.e(self.TAG, "error_5111")
 
         profilesListChrome = []
-        try:
-            self.chrome_data = json.load(open(self.home_dir + '/.config/google-chrome/Local State'))
-        except:
-            Log.e(self.TAG, "error_1013 google-chrome Local State file load error")
+
+        if (os.path.exists(self.chromePath)):
+            try:
+                with open(self.chromePath, "r") as file:
+                    self.chromium_data = json.load(file)
+            except:
+                self.fileLog.e(self.TAG, "error_5112")
 
         if(self.chrome_data is not None):
             try:
@@ -64,9 +80,10 @@ class LocalStateInfoLoader():
                     profilesListChrome.append(Profile(False, True, profile_key, profile_name))
                 profilesListChrome = sorted(profilesListChrome, key=lambda x: x.getProfileName().upper(), reverse=False)
             except:
-                Log.e(self.TAG, "error_1014 getProfiles error")
+                self.fileLog.e(self.TAG, "error_5113")
 
         self.profilesList = profilesListChromium + profilesListChrome
+
         return self.profilesList
 
 
