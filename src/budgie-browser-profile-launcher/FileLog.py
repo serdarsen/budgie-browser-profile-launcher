@@ -17,7 +17,7 @@ class FileLog():
     TAG = "FileLog"
     logErrorOn = True
     logDebugOn = False
-    logInfoOn = True
+    logInfoOn = False
 
     ERROR_TAG = "Log e: "
     DEBUG_TAG = "Log d: "
