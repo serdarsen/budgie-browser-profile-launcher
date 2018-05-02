@@ -26,7 +26,7 @@ except ImportError:
     DEVNULL = open(os.devnull, 'wb')
 
 from LocalStateInfoLoader import LocalStateInfoLoader
-from MyLog import MyLog
+from FileLog import FileLog
 
 
 class BudgieBrowserProfileLauncher(GObject.GObject, Budgie.Plugin):
@@ -73,13 +73,17 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
 
         Budgie.Applet.__init__(self)
 
+        self.fileLog = FileLog("budgie-browser-profile-launcher")
+
+        self.fileLog.i(self.TAG, "BudgieBrowserProfileLauncherApplet initialising ...")
+
         self.localStateInfoLoader = LocalStateInfoLoader()
 
         # file dirs
         try:
             self.dir_path = os.path.dirname(os.path.realpath(__file__))
         except:
-            MyLog.e(self.TAG, "Error 3010")
+            self.fileLog.e(self.TAG, "error_3010")
 
         # indicator icon and box
         self.indicatorBox = Gtk.EventBox()
@@ -133,7 +137,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
 
 
     def on_press(self, box, e):
-        MyLog.i(self.TAG, "on_press")
+        self.fileLog.i(self.TAG, "on_press")
         if e.button != 1:
             return Gdk.EVENT_PROPAGATE
         if self.popover.get_visible():
@@ -158,7 +162,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
             profile = button.getProfile()
             self.launchBrowserProfile(profile)
         except:
-            MyLog.e(self.TAG, "Error 1011")
+            self.fileLog.e(self.TAG, "error_1011")
 
 
     # this is an original method from budgie applet python example on github
@@ -175,7 +179,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
                            stdout=DEVNULL, stderr=STDOUT)
                 p1.poll()
             except:
-                MyLog.e(self.TAG, "Error 1010")
+                self.fileLog.e(self.TAG, "error_1010")
 
         elif (profile.isGoogleChrome()):
             try:
@@ -183,7 +187,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
                            stdout=DEVNULL, stderr=STDOUT)
                 p2.poll()
             except:
-                MyLog.e(self.TAG, "Error 1010")
+                self.fileLog.e(self.TAG, "error_1010")
 
 
     # updates profiles in popover
@@ -196,7 +200,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
         try:
             self.profiles = self.localStateInfoLoader.getProfiles()
         except:
-            MyLog.e(self.TAG, "Error 1015")
+            self.fileLog.e(self.TAG, "error_1015")
 
         self.popoverHeight = self.popoverBaseHeight
 
