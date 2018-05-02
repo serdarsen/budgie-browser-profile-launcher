@@ -42,6 +42,7 @@ function fail_icon() {
 echo "Uninstalling Budgie Browser Profile Launcher to $PLUGIN_DIR"
 
 sudo rm -rf "${PLUGIN_DIR}/budgie-browser-profile-launcher" || fail
+sudo rm -rf "./cache/budgie-browser-profile-launcher" || fail
 
 # icon uninstallation
 for icon in "${icons[@]}"

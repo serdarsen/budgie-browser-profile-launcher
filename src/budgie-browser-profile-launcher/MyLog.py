@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This file is part of U Brightness Controller
+# This file is part of Budgie Browser Profile Launcher
 
 # Copyright © 2018 Serdar ŞEN <serdarbote@gmail.com>
 
@@ -25,7 +25,7 @@ class MyLog():
     INFO_TAG = "MyLog i: "
 
     userHomePath = os.path.expanduser("~")
-    appCacheFolderName = "u-brightness-controller"
+    appCacheFolderName = "budgie-browser-profile-launcher"
     appCacheFolderPath = userHomePath + "/.cache/" + appCacheFolderName
     appLogFilePath = appCacheFolderPath + "/log"
 
