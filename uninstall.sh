@@ -49,7 +49,6 @@ do
    sudo rm -rf "${ICON_DIR}/${icon}" || fail_icon
 done
 
-
 budgie-panel --replace &
 
 echo "Done. Browser Profile Launcher Uninstalled."

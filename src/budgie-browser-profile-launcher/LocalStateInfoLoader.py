@@ -11,9 +11,8 @@
 
 from os.path import expanduser
 import json
-from Log import Log
 import sys
-from FileLog import FileLog
+from MyLog import MyLog
 import os.path
 
 class LocalStateInfoLoader():
@@ -32,10 +31,9 @@ class LocalStateInfoLoader():
             self.chromiumPath = self.home_dir + "/.config/chromium/Local State"
             self.chromePath = self.home_dir + "/.config/google-chrome/Local State"
         except:
-            Log.e("error_1015 get home_dir error")
+            MyLog.e(self.TAG, "Error 7010")
 
         self.profilesList = []
-        self.fileLog = FileLog("budgie-browser-profile-launcher")
 
     def getProfiles(self):
         self.profilesList = []
@@ -46,7 +44,7 @@ class LocalStateInfoLoader():
                 with open(self.chromiumPath, "r") as file:
                     self.chromium_data = json.load(file)
             except:
-                self.fileLog.e(self.TAG, "error_5110")
+                MyLog.e(self.TAG, "Error 7011")
 
         if(self.chromium_data is not None):
             try:
@@ -59,7 +57,7 @@ class LocalStateInfoLoader():
                 profilesListChromium = sorted(profilesListChromium, key=lambda x: x.getProfileName().upper(), reverse=False)
 
             except :
-                self.fileLog.e(self.TAG, "error_5111")
+                MyLog.e(self.TAG, "Error 7012")
 
         profilesListChrome = []
 
@@ -68,7 +66,7 @@ class LocalStateInfoLoader():
                 with open(self.chromePath, "r") as file:
                     self.chromium_data = json.load(file)
             except:
-                self.fileLog.e(self.TAG, "error_5112")
+                MyLog.e(self.TAG, "Error 7013")
 
         if(self.chrome_data is not None):
             try:
@@ -80,7 +78,7 @@ class LocalStateInfoLoader():
                     profilesListChrome.append(Profile(False, True, profile_key, profile_name))
                 profilesListChrome = sorted(profilesListChrome, key=lambda x: x.getProfileName().upper(), reverse=False)
             except:
-                self.fileLog.e(self.TAG, "error_5113")
+                MyLog.e(self.TAG, "Error 7014")
 
         self.profilesList = profilesListChromium + profilesListChrome
 
