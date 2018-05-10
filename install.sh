@@ -43,7 +43,7 @@ echo "Installing Budgie Browser Profile Launcher to $PLUGIN_DIR"
 
 sudo rm -rf "${PLUGIN_DIR}/budgie-browser-profile-launcher" || fail
 sudo cp -r ./src/budgie-browser-profile-launcher "${PLUGIN_DIR}/" || fail
-sudo chmod -R 644 "${PLUGIN_DIR}/budgie-browser-profile-launcher/BudgieBrowserProfileLauncher.py" || fail
+sudo chmod -R 644 "${PLUGIN_DIR}/budgie-browser-profile-launcher/BrowserProfileLauncher.py" || fail
 
 # icon installation
 for icon in "${icons[@]}"

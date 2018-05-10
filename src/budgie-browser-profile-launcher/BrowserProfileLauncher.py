@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This file is part of budgie-browser-profile-launcher
+# This file is part of Browse rProfile Launcher
 
 # Copyright © 2015-2017 Ikey Doherty <ikey@solus-project.com>
 # Copyright © 2018 Serdar ŞEN <serdarbote@gmail.com>
@@ -29,7 +29,7 @@ from LocalStateInfoLoader import LocalStateInfoLoader
 from FileLog import FileLog
 
 
-class BudgieBrowserProfileLauncher(GObject.GObject, Budgie.Plugin):
+class BrowserProfileLauncher(GObject.GObject, Budgie.Plugin):
     # This is simply an entry point into your Budgie Applet implementation. Note you must always override Object, and implement Plugin.
 
     # Good manners, make sure we have unique name in GObject type system
@@ -41,14 +41,14 @@ class BudgieBrowserProfileLauncher(GObject.GObject, Budgie.Plugin):
 
     def do_get_panel_widget(self, uuid):
         # This is where the real fun happens. Return a new Budgie.Applet instance with the given UUID. The UUID is determined by the BudgiePanelManager, and is used for lifetime tracking.
-        return BudgieBrowserProfileLauncherApplet(uuid)
+        return BrowserProfileLauncherApplet(uuid)
 
 
-class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
+class BrowserProfileLauncherApplet(Budgie.Applet):
     # Budgie.Applet is in fact a Gtk.Bin
 
     APPINDICATOR_ID = "io_serdarsen_github_budgie_browser_profile_launcher"
-    TAG = "BrowserProfileLauncherApplet"
+    TAG = "ProfileLauncherApplet"
     manager = None
     menuListBoxMarginTop = 0
     menuListBoxMarginBottom = 0
@@ -64,8 +64,8 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
     popoverHeight = popoverBaseHeight
     popoverHeightOffset = 10
     popoverWidth = 270
-    menuListRowHeight = 38
-    menuListBoxSpacing = 6
+    menuListRowHeight = 36
+    menuListBoxSpacing = 4
     dir_path = None
     profiles = []
 
@@ -75,7 +75,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
 
         self.fileLog = FileLog("budgie-browser-profile-launcher")
 
-        self.fileLog.i(self.TAG, "BudgieBrowserProfileLauncherApplet initialising ...")
+        self.fileLog.i(self.TAG, "Browser Profile Launcher Applet initialising ...")
 
         self.localStateInfoLoader = LocalStateInfoLoader()
 
@@ -88,7 +88,7 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
         # indicator icon and box
         self.indicatorBox = Gtk.EventBox()
         self.iconIndicator = Gtk.Image.new_from_icon_name(
-            "browser-profile-launcher-1-symbolic", Gtk.IconSize.LARGE_TOOLBAR
+            "browser-profile-launcher-1-symbolic", Gtk.IconSize.MENU
         )
         # self.iconIndicator.set_from_file(self.iconIndicatorPath)
         self.indicatorBox.add(self.iconIndicator)
@@ -216,18 +216,18 @@ class BudgieBrowserProfileLauncherApplet(Budgie.Applet):
 
             # menuLabel
             menuLabel = Gtk.Label(profile.getProfileName(), xalign=0)
-            menuLabel.set_margin_left(4)
+            menuLabel.set_margin_left(8)
 
             # adds list menuIcon to menuIconBox
             if (profile.isChromiumBrowser()):
                 iconChromium = Gtk.Image.new_from_icon_name(
-                    "browser-profile-launcher-2-symbolic", Gtk.IconSize.LARGE_TOOLBAR
+                    "browser-profile-launcher-2-symbolic", Gtk.IconSize.MENU
                 )
                 menuButtonContent.pack_start(iconChromium, False, False, 0)
 
             elif (not profile.isChromiumBrowser()):
                 iconChrome = Gtk.Image.new_from_icon_name(
-                    "browser-profile-launcher-3-symbolic", Gtk.IconSize.LARGE_TOOLBAR
+                    "browser-profile-launcher-3-symbolic", Gtk.IconSize.MENU
                 )
                 menuButtonContent.pack_start(iconChrome, False, False, 0)
 

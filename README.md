@@ -1,8 +1,8 @@
-Budgie Browser Profile Launcher
+Browser Profile Launcher
 ========  
 
 <br/>  
-Budgie Browser Profile Launcher is a Budgie Desktop applet for productivity. This applet lists and launches Chromium Browser and Google Chrome user profiles.<br/><br/>  
+Browser Profile Launcher is a Budgie Desktop applet for productivity. This applet lists and launches Chromium Browser and Google Chrome user profiles.<br/><br/>  
   
 <img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot1.gif" width="465" height="517"/>
   
@@ -20,7 +20,7 @@ Install
    # Execute the install script.
    ./install.sh
    
-   # You can add Budgie Browser Profile Launcher to your panel from Budgie Desktop Settings.
+   # You can add Browser Profile Launcher to your panel from Budgie Desktop Settings.
 
 ```  
 References  

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# This file is part of budgie-browser-profile-launcher
+# This file is part of Browser Profile Launcher
 
 # Copyright © 2018 Serdar ŞEN <serdarbote@gmail.com>
 
