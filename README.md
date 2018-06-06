@@ -4,8 +4,13 @@ Browser Profile Launcher
 <br/>  
 Browser Profile Launcher is a Budgie Desktop applet for productivity. This applet lists and launches Chromium Browser and Google Chrome user profiles.<br/><br/>  
   
-<img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot1.gif" width="465" height="517"/>
-  
+
+Evo Pop                    |  Arc Design
+:-------------------------:|:-------------------------:
+<img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot2.gif" width="414"/>  |  <img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot3.gif" width="414"/>
+
+<br/>
+
 Install  
 -------  
 ```bash  
@@ -23,14 +28,41 @@ Install
    # You can add Browser Profile Launcher to your panel from Budgie Desktop Settings.
 
 ```  
+
+<br/>
+
+Changelog  
+------- 
+### Added
+* New temp window
+* Add new person
+* New incognito window 
+* Delete person 
+* add-new icon, butterfly icon,delete icon, incognito icon
+* new stack pages
+* new delete dialog
+* new widgets and helpers
+* fix all packages and classes
+### Changed
+* fix log
+* fix sort
+* Readme
+### Removed
+* launcher 3 icon
+
+<br/>
+
 References  
 ------- 
 
-[Ubuntu Budgie](https://ubuntubudgie.org/)<br/>
-[budgie-desktop/budgie-desktop-examples](https://github.com/budgie-desktop/budgie-desktop-examples/tree/master/python_project)<br/>
-[budgie-menu](https://github.com/budgie-desktop/budgie-desktop/tree/master/src/applets/budgie-menu)
+[budgie-desktop-examples](https://github.com/budgie-desktop/budgie-desktop-examples/tree/master/python_project)<br/>
+[budgie-desktop applets](https://github.com/solus-project/budgie-desktop/tree/master/src/applets)<br/>
+[budgie-menu](https://github.com/budgie-desktop/budgie-desktop/tree/master/src/applets/budgie-menu)<br/>
+[user-indicator](https://github.com/solus-project/budgie-desktop/tree/master/src/applets/user-indicator)<br/>
+[clock](https://github.com/solus-project/budgie-desktop/tree/master/src/applets/clock)
 
 License  
 -------  
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or at your option) any later version.
+

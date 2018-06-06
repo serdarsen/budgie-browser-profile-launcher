@@ -6,7 +6,10 @@ ICON_DIR="/usr/share/pixmaps"
 
 declare -a icons=("browser-profile-launcher-1-symbolic.svg"
                 "browser-profile-launcher-2-symbolic.svg"
-                "browser-profile-launcher-3-symbolic.svg"
+                "browser-profile-launcher-butterfly-symbolic.svg"
+                "browser-profile-launcher-add-new-symbolic.svg"
+                "browser-profile-launcher-incognito-symbolic.svg"
+                "browser-profile-launcher-delete-symbolic.svg"
                 )
 
 # Pre-install checks
