@@ -1,6 +1,6 @@
 
 install_data(
-    'BrowserButton.py',
+    'BrowserButton.py'
     'Dialog.py',
     'DirectionalButton.py',
     'LauncherButton.py',

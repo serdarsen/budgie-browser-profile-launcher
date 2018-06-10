@@ -26,6 +26,8 @@ from widgets.DirectionalButton import DirectionalButton
 from widgets.Dialog import Dialog
 from widgets.ListView import ListView
 from widgets.LauncherButton import LauncherButton
+from widgets.BrowserButton import BrowserButton
+from widgets.ProfileButton import ProfileButton
 from models.Browser import Browser
 from log.Log import Log
 
@@ -55,11 +57,11 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.dir_path = os.path.dirname(os.path.realpath(__file__))
         self.manager = None
         self.popover = None
-        self.popoverHeightOffset = 36 + 20
+        self.popoverHeightOffset = 20
         self.popoverMinHeight = 150
         self.popoverMaxHeight = 480
         self.popoverHeight = 0
-        self.popoverWidth = 270
+        self.popoverWidth = 230
         self.launcherButtonHeight = 36
         self.lenProfiles = 0
         self.launcherButtons = []
@@ -68,9 +70,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.currentBrowser = None
         self.chromiumBrowser = None
         self.chromeBrowser = None
-        self.currentLauncherRevealer = None
-        self.chromiumRevealer = None
-        self.chromeRevealer = None
 
         Budgie.Applet.__init__(self)
 
@@ -103,7 +102,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
 
     def buildStack(self):
         self.stack = Gtk.Stack()
-        self.stack.set_homogeneous(True)
+        self.stack.set_homogeneous(False)
         self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.popover.add(self.stack)
 
@@ -146,90 +145,41 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.dialog.addOnClickMethodToNoBtn(self.dialogNoButtonOnClick)
         self.dialog.addOnClickMethodToYesBtn(self.dialogYesButtonOnClick)
 
-    def buildListItemWithBrowserName(self, revealerButtonOnClick, browser, sectionNum):
+    def buildListItemWithBrowserName(self, browser, sectionNum):
 
-        listItem = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
-
-        revealerButton = Gtk.Button()
-        label = Gtk.Label(browser.getName(), xalign=0)
-        revealerButton.add(label)
-        revealerButton.set_can_focus(False);
-        revealerButton.set_size_request(self.popoverWidth, 0)
-        listItem.add(revealerButton)
+        listItem = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         self.listView.addItem(listItem, sectionNum)
-        revealerButton.get_style_context().add_class("flat");
-        revealerButton.connect('button-press-event', revealerButtonOnClick)
 
-        revealer = Gtk.Revealer()
-        listItem.add(revealer)
-        topRevealerBox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        topRevealerBox.props.halign = Gtk.Align.START
-        # self.setMargin(topRevealerBox, 0, 10, 0, 0)
-        revealer.add(topRevealerBox)
-        revealer.set_reveal_child(False)
+        label = Gtk.Label(browser.getName(), xalign=0)
+        label.set_margin_left(8)
+        listItem.pack_start(label, True, True, 0)
 
-        if browser.getKey() is Browser.KEY_CHROMIUM:
-            newTempProfileButton = Gtk.Button()
-            newTempProfileImage = Gtk.Image.new_from_icon_name("browser-profile-launcher-butterfly-symbolic",
-                                                               Gtk.IconSize.MENU)
-            newTempProfileButton.add(newTempProfileImage)
-            newTempProfileButton.set_tooltip_text("New temp window")
-            newTempProfileButton.set_can_focus(False);
-            topRevealerBox.add(newTempProfileButton)
-            newTempProfileButton.get_style_context().add_class("flat")
-            newTempProfileButton.connect("clicked", self.newTempProfileButtonOnClick)
-
-        addNewProfileButton = Gtk.Button()
-        addNewProfileImage = Gtk.Image.new_from_icon_name("browser-profile-launcher-add-new-symbolic",
-                                                          Gtk.IconSize.MENU)
-        addNewProfileButton.add(addNewProfileImage)
-        addNewProfileButton.set_tooltip_text("Add new person")
-        addNewProfileButton.set_can_focus(False);
-        topRevealerBox.add(addNewProfileButton)
-        addNewProfileButton.get_style_context().add_class("flat")
+        addNewProfileButton = BrowserButton(browser, "browser-profile-launcher-add-new-symbolic", "Add new person")
+        listItem.pack_end(addNewProfileButton, False, False, 0)
         addNewProfileButton.connect("clicked", self.addNewProfileButtonOnClick)
 
-        return revealer
+        if browser.getKey() is Browser.KEY_CHROMIUM:
+            newTempProfileButton = BrowserButton(browser, "browser-profile-launcher-butterfly-symbolic", "New temp window")
+            listItem.pack_end(newTempProfileButton, False, False, 0)
+            newTempProfileButton.connect("clicked", self.newTempProfileButtonOnClick)
 
     def buildListItemWithProfile(self, profile, sectionNum):
-
-        listItem = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        listItem = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        self.listView.addItem(listItem, sectionNum)
 
         launcherButton = LauncherButton(profile, self.popoverWidth, self.launcherButtonHeight)
+        listItem.pack_start(launcherButton, True, True, 0)
+        launcherButton.connect("clicked", self.launcherButtonOnClick)
         self.launcherButtons.append(launcherButton)
 
-        listItem.add(launcherButton)
-        self.listView.addItem(listItem, sectionNum)
-        launcherButton.connect("button-press-event", self.launcherButtonOnPress)
-
-        laucherRevealer = Gtk.Revealer()
-        listItem.add(laucherRevealer)
-        laucherRevealerBox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
-        laucherRevealerBox.props.halign = Gtk.Align.START
-        # self.setMargin(laucherRevealerBox, 0, 10, 0, 0)
-        laucherRevealer.add(laucherRevealerBox)
-        laucherRevealer.set_reveal_child(False)
-        launcherButton.setRevealer(laucherRevealer)
-
-        incognitoButton = Gtk.Button()
-        incognitoButton.set_tooltip_text("New incognito window")
-        incognitoImage = Gtk.Image.new_from_icon_name("browser-profile-launcher-incognito-symbolic", Gtk.IconSize.MENU)
-        incognitoButton.add(incognitoImage)
-        incognitoButton.set_can_focus(False);
-        laucherRevealerBox.add(incognitoButton)
-        incognitoButton.get_style_context().add_class("flat");
-        incognitoButton.connect("clicked", self.incognitoButtonOnClick)
-
-        deleteButton = Gtk.Button()
-        deleteButton.set_tooltip_text("Delete person")
-        deleteImage = Gtk.Image.new_from_icon_name("browser-profile-launcher-delete-symbolic", Gtk.IconSize.MENU)
-        deleteButton.add(deleteImage)
-        deleteButton.set_can_focus(False);
-        laucherRevealerBox.add(deleteButton)
-        deleteButton.get_style_context().add_class("flat")
-        deleteButton.get_style_context().add_class("destructive-action")
+        deleteButton = ProfileButton(profile, "browser-profile-launcher-delete-symbolic", "Delete person")
+        listItem.pack_end(deleteButton, False, False, 0)
+        # deleteButton.get_style_context().add_class("destructive-action")
         deleteButton.connect("clicked", self.deleteButtonOnClick)
 
+        incognitoButton = ProfileButton(profile, "browser-profile-launcher-incognito-symbolic", "New incognito window")
+        listItem.pack_end(incognitoButton, False, False, 0)
+        incognitoButton.connect("clicked", self.incognitoButtonOnClick)
     ####################################
     # build END
     ####################################
@@ -242,7 +192,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.stack.set_visible_child_name("page1")
 
     def dialogNoButtonOnClick(self, btn):
-        self.hideCurrentLaucherRevealer()
         self.stack.set_visible_child_name("page1")
 
     def dialogYesButtonOnClick(self, btn):
@@ -250,30 +199,37 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.update()
         self.stack.set_visible_child_name("page1")
 
-    def newTempProfileButtonOnClick(self, widget):
+    def newTempProfileButtonOnClick(self, button):
+        self.currentBrowser = button.getBrowser()
         self.hidePopover()
-        self.hideAllRevealers()
-        self.popenHelper.launchNewTempWindow(self.currentBrowser)
+        self.popenHelper.launchNewTempWindow(button.getBrowser())
 
-    def addNewProfileButtonOnClick(self, widget):
+    def addNewProfileButtonOnClick(self, button):
         self.hidePopover()
-        self.hideAllRevealers()
-        profileKey = self.localStateHelper.getNewProfileKey(self.currentBrowser)
-        self.popenHelper.addNewProfile(self.currentBrowser, profileKey)
+        profileKey = self.localStateHelper.getNewProfileKey(button.getBrowser())
+        self.popenHelper.addNewProfile(button.getBrowser(), profileKey)
 
     def backButtonOnClick(self, button):
         self.stack.set_visible_child_name("page1")
 
-    ## Launches browser profile
     def incognitoButtonOnClick(self, button):
+        self.currentProfile = button.getProfile()
+        self.currentBrowser = button.getProfile().getBrowser()
         self.hidePopover()
-        self.popenHelper.launchNewInconitoWindow(self.currentProfile)
-        self.hideCurrentLaucherRevealer()
+        self.popenHelper.launchNewInconitoWindow(button.getProfile())
 
     def deleteButtonOnClick(self, button):
+        self.currentProfile = button.getProfile()
+        self.currentBrowser = button.getProfile().getBrowser()
         self.stack.set_visible_child_name("page2")
-        self.dialog.setTitle("Delete %s?" % self.currentProfile.getProfileName())
-        self.dialog.setSubTitle("%s will close." % self.currentBrowser.getName())
+        self.dialog.setTitle("Delete %s?" % button.getProfile().getProfileName())
+        self.dialog.setSubTitle("%s will close." % button.getProfile().getBrowser().getName())
+
+    def launcherButtonOnClick(self, button):
+        self.currentProfile = button.getProfile()
+        self.currentBrowser = button.getProfile().getBrowser()
+        self.hidePopover()
+        self.popenHelper.launchBrowserProfile(self.currentProfile)
     ####################################
     # OnClick END
     ####################################
@@ -284,7 +240,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
     ####################################
     def indicatorBoxOnPress(self, box, e):
         self.stack.set_visible_child_name("page1")
-        self.hideAllRevealers()
         if e.button != 1:
             return Gdk.EVENT_PROPAGATE
         if self.popover.get_visible():
@@ -293,38 +248,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
             self.update()
             self.manager.show_popover(self.indicatorBox)
         return Gdk.EVENT_STOP
-
-    def chromiumRevealerButtonOnPress(self, button, event):
-        self.currentBrowser = self.chromiumBrowser
-        self.hideAllLauncherButtonRevealers()
-        self.hideChromeRevealer()
-        reveal = self.chromiumRevealer.get_reveal_child()
-        self.chromiumRevealer.set_reveal_child(not reveal)
-
-    def chromeRevealerButtonOnPress(self, button, event):
-        self.currentBrowser = self.chromeBrowser
-        self.hideAllLauncherButtonRevealers()
-        self.hideChromiumRevealer()
-        reveal = self.chromeRevealer.get_reveal_child()
-        self.chromeRevealer.set_reveal_child(not reveal)
-
-    ## listens menu button clicks
-    def launcherButtonOnPress(self, button, event):
-        self.currentLauncherRevealer = button.getRevealer()
-        self.currentProfile = button.getProfile()
-        self.currentBrowser = self.currentProfile.getBrowser()
-        ## Left Mouse Button OnClick
-        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 1:
-            self.hidePopover()
-            self.hideAllRevealers()
-            self.popenHelper.launchBrowserProfile(self.currentProfile)
-        ## Right Mouse Button OnClick
-        if event.type == Gdk.EventType.BUTTON_PRESS and event.button == 3:
-            self.hideAllBrowserRevealers()
-            menuRevealer = button.getRevealer()
-            reveal = menuRevealer.get_reveal_child()
-            menuRevealer.set_reveal_child(not reveal)
-            self.hideAllLauncherButtonRevealersExceptThis(button)
     ####################################
     # OnPess END
     ####################################
@@ -351,7 +274,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
             if self.listView.isEmtpy(1):
                 self.chromiumBrowser = Browser(Browser.CHROMIUM)
                 self.availableBrowsers.append(self.chromiumBrowser)
-                self.chromiumRevealer = self.buildListItemWithBrowserName(self.chromiumRevealerButtonOnPress, self.chromiumBrowser, 1)
+                self.buildListItemWithBrowserName(self.chromiumBrowser, 1)
 
             chromiumProfiles = self.localStateHelper.getChromiumProfiles()
             chromiumProfiles = self.sortHelper.sortedProfiles(chromiumProfiles)
@@ -362,7 +285,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         else:
             self.listView.clean(1)
             self.chromiumBrowser = None
-            self.chromiumBrowser = None
 
     def updateChromeSections(self):
         # self.log.d(self.TAG, "updateChromeSections")
@@ -370,7 +292,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
             if self.listView.isEmtpy(3):
                 self.chromeBrowser = Browser(Browser.CHROME)
                 self.availableBrowsers.append(self.chromeBrowser)
-                self.chromeRevealer = self.buildListItemWithBrowserName(self.chromeRevealerButtonOnPress, self.chromeBrowser, 3)
+                self.buildListItemWithBrowserName(self.chromeBrowser, 3)
             chromeProfiles = self.localStateHelper.getChromeProfiles()
             chromeProfiles = self.sortHelper.sortedProfiles(chromeProfiles)
             self.lenProfiles += len(chromeProfiles)
@@ -380,7 +302,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         else:
             self.listView.clean(3)
             self.chromeBrowser = None
-            self.chromeRevealer = None
 
     ## This is a virtual method of the Budgie.Applet
     ## https://lazka.github.io/pgi-docs/Budgie-1.0/classes/Applet.html#Budgie.Applet.do_update_popovers
@@ -395,36 +316,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
     ####################################
     # hide START
     ####################################
-    def hideAllRevealers(self):
-        self.hideAllBrowserRevealers()
-        self.hideAllLauncherButtonRevealers()
-
-    def hideAllBrowserRevealers(self):
-        self.hideChromiumRevealer()
-        self.hideChromeRevealer()
-
-    def hideChromeRevealer(self):
-        if self.chromeRevealer is not None:
-            self.chromeRevealer.set_reveal_child(False)
-
-    def hideChromiumRevealer(self):
-        if self.chromiumRevealer is not None:
-            self.chromiumRevealer.set_reveal_child(False)
-
-    def hideAllLauncherButtonRevealers(self):
-        for btn in self.launcherButtons:
-            btn.getRevealer().set_reveal_child(False)
-
-    def hideAllLauncherButtonRevealersExceptThis(self, button):
-        for btn in self.launcherButtons:
-            if btn is not button:
-                btn.getRevealer().set_reveal_child(False)
-
-    def hideCurrentLaucherRevealer(self):
-        if self.currentLauncherRevealer is not None:
-            self.currentLauncherRevealer.set_reveal_child(False)
-
-    # hides popover if it is visible
     def hidePopover(self):
         if (self.popover is not None):
             if self.popover.get_visible():
@@ -463,15 +354,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         widget.set_margin_bottom(bottom)
         widget.set_margin_left(left)
         widget.set_margin_right(right)
-
-    # def getSizes(self):
-    #     if len(self.launcherButtons) > 0:
-    #         lBtn = self.launcherButtons[0]
-    #         self.log.d(self.TAG, "lBtnHeight : %s" % lBtn.get_allocation().height)
-    #         if lBtn.get_allocation().height > 1:
-    #             self.launcherButtonHeight = lBtn.get_allocation().height
-    #             self.popoverHeightOffset = lBtn.get_allocation().height
-    #             self.listViewButtonOffset = 0
     ####################################
     # others END
     ####################################

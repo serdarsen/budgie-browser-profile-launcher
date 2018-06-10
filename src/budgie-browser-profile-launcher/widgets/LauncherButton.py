@@ -18,8 +18,6 @@ class LauncherButton(Gtk.Button):
 
     def __init__(self, profile, width, height):
 
-        self.revealer = None
-
         Gtk.Button.__init__(self)
 
         self.TAG = "LauncherButton"
@@ -29,26 +27,16 @@ class LauncherButton(Gtk.Button):
         self.border_width = 0
         self.get_style_context().add_class("flat")
         self.profile = profile
-        self.buildContent()
 
-    def buildContent(self):
         content = Gtk.Box(Gtk.Orientation.HORIZONTAL, 0)
         self.add(content)
-        if self.profile.isChromiumBrowser():
-            iconChromium = Gtk.Image.new_from_icon_name("browser-profile-launcher-2-symbolic", Gtk.IconSize.MENU)
-            content.pack_start(iconChromium, False, False, 0)
-        elif self.profile.isGoogleChrome():
-            iconChrome = Gtk.Image.new_from_icon_name("browser-profile-launcher-2-symbolic", Gtk.IconSize.MENU)
-            content.pack_start(iconChrome, False, False, 0)
-        menuLabel = Gtk.Label(self.profile.getProfileName(), xalign=0)
-        content.pack_start(menuLabel, True, True, 0)
-        menuLabel.set_margin_left(8)
+
+        icon = Gtk.Image.new_from_icon_name("browser-profile-launcher-2-symbolic", Gtk.IconSize.MENU)
+        content.pack_start(icon, False, False, 0)
+
+        label = Gtk.Label(self.profile.getProfileName(), xalign=0)
+        content.pack_start(label, True, True, 0)
+        label.set_margin_left(8)
 
     def getProfile(self):
         return self.profile
-
-    def setRevealer(self, menuRevealer):
-        self.revealer = menuRevealer
-
-    def getRevealer(self):
-        return self.revealer

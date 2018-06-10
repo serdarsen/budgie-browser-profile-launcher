@@ -7,15 +7,13 @@ Browser Profile Launcher is a Budgie Desktop applet for productivity. This apple
 
 Evo Pop                    |  Arc Design
 :-------------------------:|:-------------------------:
-<img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot2.gif" width="414"/>  |  <img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot3.gif" width="414"/>
+<img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot4.gif" width="416"/>  |  <img src="https://raw.githubusercontent.com/serdarsen/budgie-browser-profile-launcher/master/screenshots/screenshot5.gif" width="416"/>
 
 <br/>
 
 Install
 -------
 ```bash
-   # !!! Before start, I'm not a professional linux developer. I wrote this applet and it works perfect on my ubuntu budgie (ubuntu 17:10 and 18.04, budgie version: 10.4,  device: acer aspire 5745g) . Please take your own risks and backups before install. Have fun!
-
    # Clone or download the repository
    git clone https://github.com/serdarsen/budgie-browser-profile-launcher.git
 
@@ -32,8 +30,10 @@ Install
    # To uninstall
    sudo ninja uninstall
 
+   # Logout and login after installing the applet.
    # You can add Browser Profile Launcher to your panel from Budgie Desktop Settings.
 
+   # Have fun!
 ```
 
 <br/>
@@ -41,21 +41,12 @@ Install
 Changelog
 -------
 ### Added
-* New temp window
-* Add new person
-* New incognito window
-* Delete person
-* add-new icon, butterfly icon,delete icon, incognito icon
-* new stack pages
-* new delete dialog
-* new widgets and helpers
-* fix all packages and classes
+* New widgets
 ### Changed
-* fix log
-* fix sort
+* Buttons positions
 * Readme
 ### Removed
-* launcher 3 icon
+* Revealers
 
 <br/>
 

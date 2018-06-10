@@ -83,10 +83,3 @@ class ListView(Gtk.ScrolledWindow):
                 return False
             else:
                 return True
-
-
-    # def scrollToBottom(self):
-    #     adjustment = self.get_vadjustment()
-    #     print("adjustment.get_upper() %s " + adjustment.get_upper())
-    #     print("adjustment.get_page_size() %s " + adjustment.get_page_size())
-    #     adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
