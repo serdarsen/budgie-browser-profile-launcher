@@ -14,6 +14,9 @@ Evo Pop                    |  Arc Design
 Install
 -------
 ```bash
+   ############################
+   # Install with Repository
+   ############################
    # Clone or download the repository
    git clone https://github.com/serdarsen/budgie-browser-profile-launcher.git
 
@@ -33,6 +36,27 @@ Install
    # Logout and login after installing the applet.
    # You can add Browser Profile Launcher to your panel from Budgie Desktop Settings.
 
+
+   ############################
+   # Install with PPA
+   ############################
+   # Install ppa
+   sudo add-apt-repository ppa:ubuntubudgie/backports
+   sudo apt-get update
+   
+   # Install the applet
+   sudo apt-get install budgie-browser-profile-launcher
+   
+   # To uninstall
+   sudo apt-get remove budgie-browser-profile-launcher
+
+   # Logout and login after installing the applet.
+   # You can add Browser Profile Launcher to your panel from Budgie Desktop Settings.
+
+
+
+
+
    # Have fun!
 ```
 
@@ -41,12 +65,10 @@ Install
 Changelog
 -------
 ### Added
-* New widgets
+* dim styles to title labels
 ### Changed
-* Buttons positions
-* Readme
+* scroll disabled
 ### Removed
-* Revealers
 
 <br/>
 

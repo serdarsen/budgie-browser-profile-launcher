@@ -22,12 +22,14 @@ class ListView(Gtk.ScrolledWindow):
         self.rootSection = None
         self.childSections = {}
         self.margins = [0, 0, 0, 0]  # top, bottom, left, right
+        self.maxHeight = 0
+        self.minHeight = 0
 
         Gtk.ScrolledWindow.__init__(self)
 
         self.TAG = "ListView"
         self.set_overlay_scrolling(True)
-        self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
         self.buildSections(childSectionsNum)
 
     def setMargins(self, top, bottom, left, right):
@@ -56,13 +58,13 @@ class ListView(Gtk.ScrolledWindow):
             section = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
             section.border_width = 0
             section.props.valign = Gtk.Align.START
-            self.rootSection.add(section)
+            self.rootSection.pack_start(section, False, False, 0)
             self.childSections[i] = section
 
 
     def addItem(self, item, sectionNum):
         childSection = self.childSections[sectionNum]
-        childSection.add(item)
+        childSection.pack_start(item, False, False, 0)
 
     def cleanRootSection(self):
         if self.rootSection.get_children() is not None:
@@ -83,3 +85,27 @@ class ListView(Gtk.ScrolledWindow):
                 return False
             else:
                 return True
+
+    def setMaxMinHeights(self, max, min):
+        self.maxHeight = max
+        self.minHeight = min
+
+    def onResize(self, height):
+        if height > self.maxHeight:
+            self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)  # ALWAYS
+        elif height <= self.maxHeight:
+            self.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.NEVER)
+
+    def getHeight(self):
+
+        height = 0
+        if self.rootSection.get_children() is not None:
+            for child in self.rootSection.get_children():
+                height = height + child.get_allocated_height()
+            height = height + self.getMarginTop() + self.getMarginBottom()
+
+        return height
+
+
+    def getHeight2(self):
+        return self.rootSection.get_allocated_height()

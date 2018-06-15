@@ -60,6 +60,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.popoverHeightOffset = 20
         self.popoverMinHeight = 150
         self.popoverMaxHeight = 480
+        self.popoverMinWidth = 256
         self.popoverHeight = 0
         self.popoverWidth = 230
         self.launcherButtonHeight = 36
@@ -82,7 +83,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.buildPopover()
         self.buildStack()
 
-        self.update()
+        self.update(True)
 
 
     ####################################
@@ -115,6 +116,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
 
         ## page 1 listview
         self.listView = ListView(4)
+        self.listView.setMaxMinHeights(self.popoverMaxHeight, self.popoverMinHeight)
         self.listView.setMargins(10, 3, 0, 0)
         # self.listView.get_style_context().add_class("budgie-menu")
         page1.pack_start(self.listView, False, False, 0)
@@ -152,6 +154,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
 
         label = Gtk.Label(browser.getName(), xalign=0)
         label.set_margin_left(8)
+        label.get_style_context().add_class("dim-label")
         listItem.pack_start(label, True, True, 0)
 
         addNewProfileButton = BrowserButton(browser, "browser-profile-launcher-add-new-symbolic", "Add new person")
@@ -196,7 +199,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
 
     def dialogYesButtonOnClick(self, btn):
         self.deleteProfile(self.currentProfile)
-        self.update()
+        self.update(False)
         self.stack.set_visible_child_name("page1")
 
     def newTempProfileButtonOnClick(self, button):
@@ -245,7 +248,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         if self.popover.get_visible():
             self.popover.hide()
         else:
-            self.update()
+            self.update(True)
             self.manager.show_popover(self.indicatorBox)
         return Gdk.EVENT_STOP
     ####################################
@@ -256,7 +259,7 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
     ####################################
     # update START
     ####################################
-    def update(self):
+    def update(self, isListItemAdded):
         # self.log.d(self.TAG, "update")
         self.listView.clean(2)
         self.listView.clean(4)
@@ -264,7 +267,10 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         self.lenProfiles = 0
         self.updateChromiumSections()
         self.updateChromeSections()
-        self.resizePopover()
+        if isListItemAdded:
+            self.onScrollWindowChildAdd()
+        else:
+            self.onScrollWindowChildRemove()
         self.popover.get_child().show_all()
         self.show_all()
 
@@ -328,20 +334,6 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
     ####################################
     # others START
     ####################################
-    def resizePopover(self):
-        profilesLenght = self.lenProfiles
-        browsersLenght = len(self.availableBrowsers)
-        listItemsLenght = browsersLenght + profilesLenght
-
-        self.popoverHeight = self.launcherButtonHeight * listItemsLenght + self.listView.getMarginTop() + self.listView.getMarginBottom() + self.popoverHeightOffset
-
-        if self.popoverHeight > self.popoverMaxHeight:
-            self.popoverHeight = self.popoverMaxHeight
-        if self.popoverHeight < self.popoverMinHeight:
-            self.popoverHeight = self.popoverMinHeight
-
-        self.popover.resize(self.popoverWidth, self.popoverHeight)
-
     def deleteProfile(self, profile):
         # self.log.d(self.TAG, "deleteProfile")
         self.popenHelper.killBrowser(self.currentBrowser)
@@ -356,4 +348,51 @@ class BrowserProfileLauncherApplet(Budgie.Applet):
         widget.set_margin_right(right)
     ####################################
     # others END
+    ####################################
+
+
+    ####################################
+    # onScrollWindowChild START
+    ####################################
+    def onScrollWindowChildAdd(self):
+        height1 = self.listView.getHeight()
+        # height2 = self.popover.get_allocated_height()
+        height2 = self.listView.getHeight2()
+        height = max([height1, height2])
+
+        # print("onScrollWindowChildAdd height1 : %s" % height1)
+        # print("onScrollWindowChildAdd height2 : %s" % height2)
+        # print("onScrollWindowChildAdd height : %s" % height)
+
+        self.listView.onResize(height)
+
+        if height >= self.popoverMaxHeight:
+            self.popover.resize(self.popoverMinWidth, self.popoverMaxHeight)
+        elif height < self.popoverMaxHeight:
+            self.popover.resize(self.popoverMinWidth, height)
+
+        self.popover.get_child().show_all()
+        self.show_all()
+
+    def onScrollWindowChildRemove(self):
+        height1 = self.listView.getHeight()
+        # height2 = self.popover.get_allocated_height()
+        height2 = self.listView.getHeight2()
+        height = min([height1, height2])
+
+        # print("onScrollWindowChildRemove height1 : %s" % height1)
+        # print("onScrollWindowChildRemove height2 : %s" % height2)
+        # print("onScrollWindowChildRemove height : %s" % height)
+
+        self.listView.onResize(height)
+
+        if height >= self.popoverMaxHeight:
+            self.popover.resize(self.popoverMinWidth, self.popoverMaxHeight)
+        elif height < self.popoverMaxHeight:
+            self.popover.resize(self.popoverMinWidth, height)
+
+        self.popover.get_child().show_all()
+        self.show_all()
+    ####################################
+    # onScrollWindowChild END
     ####################################

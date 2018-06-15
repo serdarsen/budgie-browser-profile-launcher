@@ -35,7 +35,7 @@ class LauncherButton(Gtk.Button):
         content.pack_start(icon, False, False, 0)
 
         label = Gtk.Label(self.profile.getProfileName(), xalign=0)
-        content.pack_start(label, True, True, 0)
+        content.pack_start(label, False, False, 0)
         label.set_margin_left(8)
 
     def getProfile(self):
